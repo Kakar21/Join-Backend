@@ -1,25 +1,5 @@
 from django.db import models
 
-# Create your models here.
-class Task(models.Model):
-    taskTitle = models.CharField(max_length=255)
-    description = models.TextField()
-    dueDate = models.DateField()
-    priority = models.CharField(max_length=10)
-    category = models.CharField(max_length=15)
-    state = models.CharField(max_length=15)
-
-    def __str__(self):
-        return self.taskTitle
-    
-
-class Subtask(models.Model):
-    task = models.ForeignKey(Task, related_name="subtasks", on_delete=models.CASCADE)
-    description = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.description
-
 
 class Contact(models.Model):
     color = models.CharField(max_length=7)
@@ -29,3 +9,19 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Create your models here.
+class Task(models.Model):
+    task_title = models.CharField(max_length=255)
+    description = models.TextField()
+    assigned_to = models.ManyToManyField(Contact, related_name="task")
+    due_date = models.DateField()
+    priority = models.CharField(max_length=10)
+    category = models.CharField(max_length=15)
+    subtasks = models.JSONField(default=list, blank=True)
+    subtasks_done = models.JSONField(default=list, blank=True)
+    state = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.task_title
