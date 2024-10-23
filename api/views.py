@@ -7,13 +7,17 @@ from .models import Task, Contact
 from .serializers import TaskSerializer, ContactSerializer, SummarySerializer
 
 # Create your views here.
+
+
 class TasksViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+
 class ContactsViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
 
 class SummaryView(APIView):
 
@@ -23,7 +27,8 @@ class SummaryView(APIView):
         urgent_count = Task.objects.filter(priority="urgent").count()
         tasks_count = Task.objects.all().count()
         in_progress_count = Task.objects.filter(state="InProgress").count()
-        awaiting_feedback_count = Task.objects.filter(state="AwaitFeedback").count()
+        awaiting_feedback_count = Task.objects.filter(
+            state="AwaitFeedback").count()
 
         summary = {
             "todo_count": todo_count,
@@ -33,7 +38,5 @@ class SummaryView(APIView):
             "in_progress_count": in_progress_count,
             "awaiting_feedback_count": awaiting_feedback_count
         }
-        serializer  = SummarySerializer(summary)
+        serializer = SummarySerializer(summary)
         return Response(serializer.data)
-    
-    

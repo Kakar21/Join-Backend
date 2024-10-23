@@ -46,4 +46,3 @@ class SummarySerializer(serializers.Serializer):
             else:
                 deadline = task.due_date.strftime('%B %d, %Y')
                 return deadline
-        
