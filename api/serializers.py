@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Task, Contact
+from datetime import date
 
 
 class ContactSerializer(serializers.ModelSerializer):
@@ -28,5 +29,21 @@ class TaskSerializer(serializers.ModelSerializer):
                   "due_date", "priority", "category", "subtasks", "subtasks_done", "state"]
 
 
-class SummarySerializer(serializers.ModelSerializer):
-    pass
+class SummarySerializer(serializers.Serializer):
+    todo_count = serializers.IntegerField()
+    done_count = serializers.IntegerField()
+    urgent_count = serializers.IntegerField()
+    next_deadline = serializers.SerializerMethodField()
+    tasks_count = serializers.IntegerField()
+    in_progress_count = serializers.IntegerField()
+    awaiting_feedback_count = serializers.IntegerField()
+
+    def get_next_deadline(self, obj):
+        task_dates_sorted = Task.objects.order_by("due_date")
+        for task in task_dates_sorted:
+            if task.due_date <= date.today():
+                continue
+            else:
+                deadline = task.due_date.strftime('%B %d, %Y')
+                return deadline
+        
