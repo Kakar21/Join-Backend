@@ -17,6 +17,7 @@ class TaskSerializer(serializers.ModelSerializer):
         many=True,
         write_only=True,
         source="assigned_to",
+        required=False
     )
     subtasks = serializers.ListField(
         child=serializers.CharField(), required=False)
