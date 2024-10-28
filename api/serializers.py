@@ -4,13 +4,14 @@ from datetime import date
 
 
 class ContactSerializer(serializers.ModelSerializer):
-
+    """Serializes all fields for the Contact model."""
     class Meta:
         model = Contact
         fields = "__all__"
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    """Serializes task data with related contacts and subtasks."""
     assigned_to = ContactSerializer(many=True, read_only=True)
     contact_ids = serializers.PrimaryKeyRelatedField(
         queryset=Contact.objects.all(),
@@ -31,6 +32,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class SummarySerializer(serializers.Serializer):
+    """Serializes summary data including task counts and next deadline."""
     todo_count = serializers.IntegerField()
     done_count = serializers.IntegerField()
     urgent_count = serializers.IntegerField()
@@ -40,6 +42,9 @@ class SummarySerializer(serializers.Serializer):
     awaiting_feedback_count = serializers.IntegerField()
 
     def get_next_deadline(self, obj):
+        """
+        Returns the date of the next upcoming task deadline.
+        """
         task_dates_sorted = Task.objects.order_by("due_date")
         for task in task_dates_sorted:
             if task.due_date <= date.today():
