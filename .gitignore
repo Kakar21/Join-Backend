@@ -12,9 +12,6 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 
-# Ignore the migrations folder (optional, depends on your workflow)
-**/migrations/
-
 # Virtual environment
 env/
 venv/
